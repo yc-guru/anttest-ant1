@@ -36,6 +36,50 @@
             color: #333;
             margin-top: 10px;
         }
+        .option {
+            padding: 15px 30px;
+            margin: 10px 0;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+        .option:hover {
+            background: #e0e0e0;
+            transform: scale(1.05);
+        }
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .option.correct {
+            background: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
+        .option.incorrect {
+            background: #f44336;
+            color: white;
+            border-color: #f44336;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            display: none;
+        }
+        .result.show {
+            display: block;
+        }
+        .result.correct {
+            color: #4caf50;
+        }
+        .result.incorrect {
+            color: #f44336;
+        }
     </style>
 </head>
 <body>
@@ -44,13 +88,48 @@
         <div class="test-item">
             <div class="chinese-char">厚</div>
             <div class="options">
-                <p><strong>A:</strong> hou</p>
-                <p><strong>B:</strong> gua</p>
+                <div class="option" onclick="selectAnswer('A')"><strong>A:</strong> hou</div>
+                <div class="option" onclick="selectAnswer('B')"><strong>B:</strong> gua</div>
             </div>
+            <div class="result" id="result"></div>
         </div>
     </div>
 
     <script>
+        const correctAnswer = 'A'; // hou is the correct pronunciation for 厚
+
+        function selectAnswer(answer) {
+            // Remove previous selections
+            document.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            // Get the clicked option
+            const options = document.querySelectorAll('.option');
+            let clickedOption;
+            if (answer === 'A') {
+                clickedOption = options[0];
+            } else {
+                clickedOption = options[1];
+            }
+
+            // Show result
+            const resultDiv = document.getElementById('result');
+            resultDiv.classList.add('show');
+
+            if (answer === correctAnswer) {
+                clickedOption.classList.add('correct');
+                resultDiv.classList.remove('incorrect');
+                resultDiv.classList.add('correct');
+                resultDiv.textContent = '✓ Correct!';
+            } else {
+                clickedOption.classList.add('incorrect');
+                resultDiv.classList.remove('correct');
+                resultDiv.classList.add('incorrect');
+                resultDiv.textContent = '✗ Incorrect! The correct answer is A: hou';
+            }
+        }
+
         // Disable right-click
         document.addEventListener('contextmenu', function(event) {
             event.preventDefault();

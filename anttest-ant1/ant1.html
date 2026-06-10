@@ -3,131 +3,351 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chinese Test - 厚</title>
+    <title>Chinese Pronunciation Quiz</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
         }
         .container {
+            max-width: 900px;
+            margin: 0 auto;
             background: white;
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
             text-align: center;
+            color: #333;
+            margin-bottom: 30px;
         }
-        .test-item {
-            margin: 20px 0;
-            font-size: 20px;
+        .quiz-section {
+            display: none;
         }
-        .chinese-char {
-            font-size: 48px;
-            font-weight: bold;
+        .quiz-section.active {
+            display: block;
+        }
+        .question-container {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        .question-number {
             color: #667eea;
+            font-weight: bold;
+            font-size: 14px;
             margin-bottom: 10px;
         }
-        .options {
-            font-size: 18px;
+        .question-text {
+            font-size: 24px;
+            font-weight: bold;
             color: #333;
-            margin-top: 10px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
         }
         .option {
-            padding: 15px 30px;
-            margin: 10px 0;
-            background: #f0f0f0;
+            padding: 15px;
+            background: #e8f0fe;
             border: 2px solid #ddd;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 18px;
+            text-align: center;
+            font-size: 16px;
         }
         .option:hover {
-            background: #e0e0e0;
+            background: #d0e0f0;
             transform: scale(1.05);
+            border-color: #667eea;
         }
         .option.selected {
             background: #667eea;
             color: white;
             border-color: #667eea;
         }
-        .option.correct {
+        .button-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+        button {
+            padding: 12px 30px;
+            margin: 0 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-next {
+            background: #667eea;
+            color: white;
+        }
+        .btn-next:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+        .btn-finish {
             background: #4caf50;
             color: white;
-            border-color: #4caf50;
         }
-        .option.incorrect {
-            background: #f44336;
-            color: white;
-            border-color: #f44336;
+        .btn-finish:hover {
+            background: #45a049;
+            transform: scale(1.05);
         }
-        .result {
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
+        .result-section {
             display: none;
+            text-align: center;
         }
-        .result.show {
+        .result-section.active {
             display: block;
         }
-        .result.correct {
-            color: #4caf50;
+        .score-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 30px 0;
         }
-        .result.incorrect {
-            color: #f44336;
+        .shuaxu-container {
+            margin: 40px 0;
+            padding: 30px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        .shuaxu-label {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .shuaxu {
+            position: relative;
+            height: 60px;
+            background: #e0e0e0;
+            border-radius: 30px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .shuaxu-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50 0%, #8bc34a 100%);
+            border-radius: 30px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .shuaxu-scale {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5px;
+            position: relative;
+            height: 30px;
+        }
+        .shuaxu-tick {
+            position: absolute;
+            bottom: 0;
+            width: 1px;
+            background: #999;
+        }
+        .shuaxu-tick.major {
+            height: 20px;
+            width: 2px;
+            background: #333;
+        }
+        .shuaxu-tick.minor {
+            height: 10px;
+        }
+        .shuaxu-label-item {
+            font-size: 12px;
+            color: #333;
+        }
+        .progress-info {
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Chinese Test</h1>
-        <div class="test-item">
-            <div class="chinese-char">厚</div>
-            <div class="options">
-                <div class="option" onclick="selectAnswer('A')"><strong>A:</strong> hou</div>
-                <div class="option" onclick="selectAnswer('B')"><strong>B:</strong> gua</div>
+        <h1>Chinese Pronunciation Quiz</h1>
+        
+        <!-- Quiz Section -->
+        <div class="quiz-section active" id="quizSection">
+            <div class="progress-info" id="progressInfo">Question 1 of 20</div>
+            <div class="question-container" id="questionContainer">
+                <!-- Questions will be generated by JavaScript -->
             </div>
-            <div class="result" id="result"></div>
+            <div class="button-group">
+                <button class="btn-next" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+                <button class="btn-finish" id="finishBtn" onclick="finishQuiz()" style="display:none;">Finish Quiz</button>
+            </div>
+        </div>
+
+        <!-- Result Section -->
+        <div class="result-section" id="resultSection">
+            <h2>Quiz Completed!</h2>
+            <div class="score-display" id="scoreDisplay">0/100</div>
+            
+            <div class="shuaxu-container">
+                <div class="shuaxu-label">Score Number Axis (数轴)</div>
+                <div class="shuaxu">
+                    <div class="shuaxu-bar" id="shuaxuBar" style="width: 0%;">
+                        <span id="scoreLabel" style="margin-right: 10px;">0</span>
+                    </div>
+                </div>
+                <div class="shuaxu-scale" id="shuaxuScale">
+                    <!-- Ticks will be generated by JavaScript -->
+                </div>
+            </div>
+
+            <button class="btn-next" onclick="restartQuiz()" style="margin-top: 20px;">Retake Quiz</button>
         </div>
     </div>
 
     <script>
-        const correctAnswer = 'A'; // hou is the correct pronunciation for 厚
+        const questions = [
+            { char: '厚', options: ['hou', 'gua'], correct: 0 },
+            { char: '薄', options: ['bo', 'bao'], correct: 0 },
+            { char: '高', options: ['gao', 'gua'], correct: 0 },
+            { char: '低', options: ['di', 'dai'], correct: 0 },
+            { char: '快', options: ['kuai', 'kui'], correct: 0 },
+            { char: '慢', options: ['man', 'men'], correct: 0 },
+            { char: '好', options: ['hao', 'hao'], correct: 0 },
+            { char: '坏', options: ['huai', 'hai'], correct: 0 },
+            { char: '大', options: ['da', 'du'], correct: 0 },
+            { char: '小', options: ['xiao', 'xiao'], correct: 0 },
+            { char: '多', options: ['duo', 'dao'], correct: 0 },
+            { char: '少', options: ['shao', 'sao'], correct: 0 },
+            { char: '美', options: ['mei', 'mo'], correct: 0 },
+            { char: '丑', options: ['chou', 'chu'], correct: 0 },
+            { char: '热', options: ['re', 'rao'], correct: 0 },
+            { char: '冷', options: ['leng', 'lang'], correct: 0 },
+            { char: '明', options: ['ming', 'meng'], correct: 0 },
+            { char: '暗', options: ['an', 'en'], correct: 0 },
+            { char: '新', options: ['xin', 'xin'], correct: 0 },
+            { char: '旧', options: ['jiu', 'jiao'], correct: 0 }
+        ];
 
-        function selectAnswer(answer) {
-            // Remove previous selections
-            document.querySelectorAll('.option').forEach(option => {
-                option.classList.remove('selected', 'correct', 'incorrect');
+        let currentQuestion = 0;
+        let answers = [];
+        let score = 0;
+
+        function initQuiz() {
+            answers = new Array(questions.length).fill(-1);
+            currentQuestion = 0;
+            score = 0;
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const q = questions[currentQuestion];
+            const container = document.getElementById('questionContainer');
+            
+            let optionsHtml = '';
+            q.options.forEach((option, index) => {
+                const selectedClass = answers[currentQuestion] === index ? 'selected' : '';
+                optionsHtml += `<div class="option ${selectedClass}" onclick="selectOption(${index})">${String.fromCharCode(65+index)}: ${option}</div>`;
             });
 
-            // Get the clicked option
-            const options = document.querySelectorAll('.option');
-            let clickedOption;
-            if (answer === 'A') {
-                clickedOption = options[0];
+            container.innerHTML = `
+                <div class="question-number">Question ${currentQuestion + 1}</div>
+                <div class="question-text">${q.char}</div>
+                <div class="options">${optionsHtml}</div>
+            `;
+
+            document.getElementById('progressInfo').textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+
+            // Show/hide buttons
+            if (currentQuestion === questions.length - 1) {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('finishBtn').style.display = 'inline-block';
             } else {
-                clickedOption = options[1];
+                document.getElementById('nextBtn').style.display = 'inline-block';
+                document.getElementById('finishBtn').style.display = 'none';
+            }
+        }
+
+        function selectOption(index) {
+            answers[currentQuestion] = index;
+            displayQuestion();
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            // Calculate score
+            score = 0;
+            for (let i = 0; i < questions.length; i++) {
+                if (answers[i] === questions[i].correct) {
+                    score += 5; // Each question worth 5 marks
+                }
             }
 
-            // Show result
-            const resultDiv = document.getElementById('result');
-            resultDiv.classList.add('show');
+            // Show results
+            document.getElementById('quizSection').classList.remove('active');
+            document.getElementById('resultSection').classList.add('active');
+            document.getElementById('scoreDisplay').textContent = `${score}/100`;
+            updateShuaxu(score);
+        }
 
-            if (answer === correctAnswer) {
-                clickedOption.classList.add('correct');
-                resultDiv.classList.remove('incorrect');
-                resultDiv.classList.add('correct');
-                resultDiv.textContent = '✓ Correct!';
-            } else {
-                clickedOption.classList.add('incorrect');
-                resultDiv.classList.remove('correct');
-                resultDiv.classList.add('incorrect');
-                resultDiv.textContent = '✗ Incorrect! The correct answer is A: hou';
+        function updateShuaxu(score) {
+            const percentage = (score / 100) * 100;
+            document.getElementById('shuaxuBar').style.width = percentage + '%';
+            document.getElementById('scoreLabel').textContent = score;
+
+            // Generate scale
+            const scaleContainer = document.getElementById('shuaxuScale');
+            scaleContainer.innerHTML = '';
+            
+            for (let i = 0; i <= 100; i += 5) {
+                const tick = document.createElement('div');
+                tick.className = 'shuaxu-tick major';
+                tick.style.left = (i / 100) * 100 + '%';
+                tick.style.transform = 'translateX(-50%)';
+                scaleContainer.appendChild(tick);
+
+                // Add labels at major ticks
+                if (i % 20 === 0) {
+                    const label = document.createElement('div');
+                    label.className = 'shuaxu-label-item';
+                    label.textContent = i;
+                    label.style.position = 'absolute';
+                    label.style.left = (i / 100) * 100 + '%';
+                    label.style.transform = 'translateX(-50%)';
+                    label.style.bottom = '-25px';
+                    scaleContainer.appendChild(label);
+                }
             }
+        }
+
+        function restartQuiz() {
+            document.getElementById('quizSection').classList.add('active');
+            document.getElementById('resultSection').classList.remove('active');
+            initQuiz();
         }
 
         // Disable right-click
@@ -160,6 +380,11 @@
                 document.body.innerHTML = '';
             }
         }, 500);
+
+        // Initialize quiz on page load
+        window.onload = function() {
+            initQuiz();
+        };
     </script>
 </body>
 </html>

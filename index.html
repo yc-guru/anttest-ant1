@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Cache System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .cache-stats {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .cache-controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button.danger {
+            background-color: #dc3545;
+        }
+        button.danger:hover {
+            background-color: #c82333;
+        }
+        .cache-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border-left: 4px solid #28a745;
+        }
+        .cache-item.expired {
+            border-left-color: #dc3545;
+            opacity: 0.7;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .status-active {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-expired {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Server Cache System</h1>
+    
+    <!-- Toast Notification -->
+    <div id="toast" style="position: fixed; bottom: 20px; right: 20px; background: #28a745; color: white; padding: 12px 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 1000;"></div>
+    
+    <div class="cache-stats">
+        <h2>Cache Statistics</h2>
+        <p>Total Items: <span id="totalItems">0</span></p>
+        <p>Active Items: <span id="activeItems">0</span></p>
+        <p>Expired Items: <span id="expiredItems">0</span></p>
+        <p>Cache Size: <span id="cacheSize">0 bytes</span></p>
+    </div>
+
+    <div class="cache-controls">
+        <h2>Cache Controls</h2>
+        <button onclick="addSampleData()">Add Sample Data</button>
+        <button onclick="refreshCache()">Refresh Cache</button>
+        <button onclick="clearExpired()">Clear Expired</button>
+        <button class="danger" onclick="clearAllCache()">Clear All Cache</button>
+    </div>
+
+    <div id="cacheDisplay">
+        <h2>Cached Items</h2>
+        <div id="cacheList"></div>
+    </div>
+
+    <script>
+        /**
+         * Server Cache Class
+         * Implements an in-memory cache with TTL (Time To Live) support
+         */
+        class ServerCache {
+            constructor(defaultTTL = 3600000) { // Default TTL: 1 hour
+                this.cache = new Map();
+                this.defaultTTL = defaultTTL;
+                this.stats = {
+                    hits: 0,
+                    misses: 0,
+                    sets: 0,
+                    deletes: 0
+                };
+            }
+
+            /**
+             * Set a cache item
+             * @param {string} key - Cache key
+             * @param {*} value - Value to cache
+             * @param {number} [ttl] - Time to live in milliseconds (optional)
+             */
+            set(key, value, ttl = this.defaultTTL) {
+                const item = {
+                    value: value,
+                    timestamp: Date.now(),
+                    ttl: ttl,
+                    expiresAt: Date.now() + ttl
+                };
+                this.cache.set(key, item);
+                this.stats.sets++;
+                console.log(`Cache SET: ${key}`);
+                this.updateDisplay();
+            }
+
+            /**
+             * Get a cache item
+             * @param {string} key - Cache key
+             * @returns {*} Cached value or null if not found/expired
+             */
+            get(key) {
+                const item = this.cache.get(key);
+                
+                if (!item) {
+                    this.stats.misses++;
+                    console.log(`Cache MISS: ${key}`);
+                    return null;
+                }
+
+                // Check if item has expired
+                if (Date.now() > item.expiresAt) {
+                    this.cache.delete(key);
+                    this.stats.misses++;
+                    console.log(`Cache EXPIRED: ${key}`);
+                    this.updateDisplay();
+                    return null;
+                }
+
+                this.stats.hits++;
+                console.log(`Cache HIT: ${key}`);
+                this.updateDisplay();
+                return item.value;
+            }
+
+            /**
+             * Check if a key exists and is not expired
+             * @param {string} key - Cache key
+             * @returns {boolean}
+             */
+            has(key) {
+                const item = this.cache.get(key);
+                if (!item) return false;
+                
+                if (Date.now() > item.expiresAt) {
+                    this.cache.delete(key);
+                    return false;
+                }
+                return true;
+            }
+
+            /**
+             * Delete a specific cache item
+             * @param {string} key - Cache key
+             */
+            delete(key) {
+                const deleted = this.cache.delete(key);
+                if (deleted) {
+                    this.stats.deletes++;
+                    console.log(`Cache DELETE: ${key}`);
+                    this.updateDisplay();
+                }
+            }
+
+            /**
+             * Clear all expired items
+             */
+            clearExpired() {
+                const now = Date.now();
+                let cleared = 0;
+                for (const [key, item] of this.cache.entries()) {
+                    if (now > item.expiresAt) {
+                        this.cache.delete(key);
+                        cleared++;
+                    }
+                }
+                console.log(`Cleared ${cleared} expired items`);
+                this.updateDisplay();
+                return cleared;
+            }
+
+            /**
+             * Clear all cache items
+             */
+            clear() {
+                const size = this.cache.size;
+                this.cache.clear();
+                console.log(`Cleared all ${size} cache items`);
+                this.updateDisplay();
+            }
+
+            /**
+             * Get cache statistics
+             * @returns {object}
+             */
+            getStats() {
+                const now = Date.now();
+                let active = 0;
+                let expired = 0;
+                let totalSize = 0;
+
+                for (const [key, item] of this.cache.entries()) {
+                    const itemSize = JSON.stringify(item.value).length;
+                    totalSize += itemSize;
+                    
+                    if (now > item.expiresAt) {
+                        expired++;
+                    } else {
+                        active++;
+                    }
+                }
+
+                return {
+                    total: this.cache.size,
+                    active: active,
+                    expired: expired,
+                    size: totalSize,
+                    hits: this.stats.hits,
+                    misses: this.stats.misses,
+                    sets: this.stats.sets,
+                    hitRate: this.stats.hits + this.stats.misses > 0 
+                        ? ((this.stats.hits / (this.stats.hits + this.stats.misses)) * 100).toFixed(2) + '%'
+                        : 'N/A'
+                };
+            }
+
+            /**
+             * Get all cache items
+             * @returns {Array}
+             */
+            getAll() {
+                const items = [];
+                const now = Date.now();
+                
+                for (const [key, item] of this.cache.entries()) {
+                    items.push({
+                        key: key,
+                        value: item.value,
+                        timestamp: item.timestamp,
+                        ttl: item.ttl,
+                        expiresAt: item.expiresAt,
+                        isExpired: now > item.expiresAt,
+                        timeRemaining: Math.max(0, item.expiresAt - now)
+                    });
+                }
+                
+                return items;
+            }
+
+            /**
+             * Update the display (to be implemented by UI)
+             */
+            updateDisplay() {
+                // This will be overridden by the UI implementation
+                if (typeof window.updateCacheDisplay === 'function') {
+                    window.updateCacheDisplay();
+                }
+            }
+        }
+
+        // Initialize the server cache
+        const serverCache = new ServerCache(60000); // 1 minute default TTL for demo
+
+        // Make updateCacheDisplay available globally
+        window.updateCacheDisplay = function() {
+            const stats = serverCache.getStats();
+            const cacheItems = serverCache.getAll();
+            
+            // Update statistics
+            document.getElementById('totalItems').textContent = stats.total;
+            document.getElementById('activeItems').textContent = stats.active;
+            document.getElementById('expiredItems').textContent = stats.expired;
+            document.getElementById('cacheSize').textContent = formatBytes(stats.size);
+            
+            // Update cache list display
+            const cacheList = document.getElementById('cacheList');
+            cacheList.innerHTML = '';
+            
+            if (cacheItems.length === 0) {
+                cacheList.innerHTML = '<p>No items in cache</p>';
+                return;
+            }
+            
+            cacheItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = `cache-item ${item.isExpired ? 'expired' : ''}`;
+                
+                const timeRemaining = item.isExpired 
+                    ? '<span class="status-expired">EXPIRED</span>' 
+                    : `<span class="status-active">Active</span> - ${formatTime(item.timeRemaining)} remaining`;
+                
+                div.innerHTML = `
+                    <strong>Key:</strong> ${item.key}<br>
+                    <strong>Status:</strong> ${timeRemaining}<br>
+                    <strong>Value:</strong> <pre>${JSON.stringify(item.value, null, 2)}</pre>
+                    <button onclick="serverCache.delete('${item.key}')" style="margin-top:10px;">Delete</button>
+                `;
+                cacheList.appendChild(div);
+            });
+        };
+
+        // Utility functions
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function formatTime(ms) {
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            
+            if (hours > 0) return `${hours}h ${minutes % 60}m`;
+            if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+            return `${seconds}s`;
+        }
+
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.transform = 'translateY(0)';
+            toast.style.opacity = '1';
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateY(100px)';
+                toast.style.opacity = '0';
+            }, 2000);
+        }
+
+        // Control functions
+        function addSampleData() {
+            const sampleData = [
+                { key: 'user_1', value: { id: 1, name: 'John Doe', email: 'john@example.com' }, ttl: 120000 },
+                { key: 'user_2', value: { id: 2, name: 'Jane Smith', email: 'jane@example.com' }, ttl: 90000 },
+                { key: 'product_1', value: { id: 101, name: 'Laptop', price: 999.99 }, ttl: 180000 },
+                { key: 'product_2', value: { id: 102, name: 'Mouse', price: 29.99 }, ttl: 150000 },
+                { key: 'config', value: { theme: 'dark', language: 'en', timezone: 'UTC' }, ttl: 300000 }
+            ];
+            
+            sampleData.forEach(item => {
+                serverCache.set(item.key, item.value, item.ttl);
+            });
+            
+            console.log('Added sample data to cache');
+        }
+
+        function refreshCache() {
+            serverCache.updateDisplay();
+            showToast('Cache display refreshed');
+        }
+
+        function clearExpired() {
+            const cleared = serverCache.clearExpired();
+            alert(`Cleared ${cleared} expired items from cache`);
+        }
+
+        function clearAllCache() {
+            if (confirm('Are you sure you want to clear all cache items?')) {
+                serverCache.clear();
+                alert('Cache cleared successfully');
+            }
+        }
+
+        // Initialize display on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            serverCache.updateDisplay();
+            
+            // Auto-refresh display every 5 seconds to show TTL countdown
+            setInterval(() => {
+                serverCache.updateDisplay();
+            }, 5000);
+        });
+
+        // Example of how to use the cache in your application
+        /*
+        // Setting cache
+        serverCache.set('api_response', { data: [1, 2, 3] }, 60000);
+        
+        // Getting from cache
+        const cachedData = serverCache.get('api_response');
+        if (cachedData) {
+            console.log('Using cached data:', cachedData);
+        } else {
+            // Fetch fresh data from server
+            console.log('Cache miss, fetching fresh data...');
+        }
+        
+        // Check if exists
+        if (serverCache.has('api_response')) {
+            console.log('Data is cached');
+        }
+        */
+    </script>
+</body>
+</html>

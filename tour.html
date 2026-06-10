@@ -1,0 +1,1517 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelExperiences - Book Unforgettable Tours</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        /* Header */
+        header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        .logo span {
+            color: #003580;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ff6b35;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-login {
+            padding: 0.5rem 1.5rem;
+            border: 2px solid #003580;
+            background: transparent;
+            color: #003580;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            background: #003580;
+            color: white;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff6b35;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            background: linear-gradient(135deg, #003580 0%, #0050b3 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 50px;
+            padding: 0.5rem;
+            display: flex;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: none;
+            font-size: 1rem;
+            border-radius: 50px;
+            outline: none;
+        }
+
+        .search-btn {
+            padding: 1rem 2.5rem;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .search-btn:hover {
+            background: #e55a2b;
+        }
+
+        /* Categories */
+        .categories {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #003580;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .category-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .category-count {
+            font-size: 0.875rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        /* Featured Tours */
+        .featured {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .tour-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .tour-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .tour-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .tour-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .tour-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #ff6b35;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tour-content {
+            padding: 1.5rem;
+        }
+
+        .tour-category {
+            color: #ff6b35;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .tour-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #003580;
+        }
+
+        .tour-location {
+            color: #666;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .tour-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stars {
+            color: #ffc107;
+        }
+
+        .rating-count {
+            color: #666;
+            font-size: 0.875rem;
+        }
+
+        .tour-duration {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .tour-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .tour-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        .tour-price span {
+            font-size: 0.875rem;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .btn-book {
+            padding: 0.75rem 1.5rem;
+            background: #003580;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-book:hover {
+            background: #002255;
+            transform: scale(1.05);
+        }
+
+        /* Why Choose Us */
+        .why-us {
+            background: #003580;
+            color: white;
+            padding: 4rem 2rem;
+        }
+
+        .why-us-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .why-us .section-title {
+            color: white;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-desc {
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-name {
+            font-weight: 600;
+            color: #003580;
+        }
+
+        .author-location {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a2e;
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: #ff6b35;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #ff6b35;
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid #333;
+            text-align: center;
+            color: #888;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #28a745;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Tour Detail Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: #ff6b35;
+            color: white;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-category {
+            color: #ff6b35;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: #003580;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-location {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-description {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-highlights {
+            margin-bottom: 2rem;
+        }
+
+        .modal-highlights h3 {
+            color: #003580;
+            margin-bottom: 1rem;
+        }
+
+        .highlight-list {
+            list-style: none;
+        }
+
+        .highlight-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #555;
+        }
+
+        .highlight-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .booking-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .booking-date {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .booking-date label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .booking-date input {
+            padding: 0.75rem 1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            min-width: 200px;
+        }
+
+        .booking-price {
+            text-align: right;
+        }
+
+        .booking-price .price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+
+        .booking-price .per-person {
+            color: #666;
+        }
+
+        .btn-confirm {
+            padding: 1rem 2.5rem;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-confirm:hover {
+            background: #e55a2b;
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .search-container {
+                flex-direction: column;
+                border-radius: 15px;
+            }
+
+            .search-input {
+                border-radius: 15px;
+            }
+
+            .search-btn {
+                border-radius: 15px;
+            }
+
+            .tour-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">Tour<span>Hub</span></div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Tours</a></li>
+                <li><a href="#">Destinations</a></li>
+                <li><a href="#">Deals</a></li>
+                <li><a href="#">About Us</a></li>
+            </ul>
+            <div class="header-actions">
+                <button class="btn-login" onclick="openSignInModal()">Sign In</button>
+                <div class="cart-icon" onclick="showCart()">
+                    🛒
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Discover Amazing Experiences</h1>
+        <p>Book unforgettable tours and activities around the world</p>
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Where do you want to go? Search destinations, tours, activities...">
+            <button class="search-btn">Search</button>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <h2 class="section-title">Browse by Category</h2>
+        <div class="category-grid">
+            <div class="category-card" onclick="filterCategory('Adventure')">
+                <div class="category-icon">🏔️</div>
+                <div class="category-name">Adventure</div>
+                <div class="category-count">245 Tours</div>
+            </div>
+            <div class="category-card" onclick="filterCategory('Cultural')">
+                <div class="category-icon">🏛️</div>
+                <div class="category-name">Cultural</div>
+                <div class="category-count">189 Tours</div>
+            </div>
+            <div class="category-card" onclick="filterCategory('Food')">
+                <div class="category-icon">🍜</div>
+                <div class="category-name">Food & Culinary</div>
+                <div class="category-count">156 Tours</div>
+            </div>
+            <div class="category-card" onclick="filterCategory('Nature')">
+                <div class="category-icon">🌿</div>
+                <div class="category-name">Nature & Wildlife</div>
+                <div class="category-count">203 Tours</div>
+            </div>
+            <div class="category-card" onclick="filterCategory('Water')">
+                <div class="category-icon">🏄</div>
+                <div class="category-name">Water Sports</div>
+                <div class="category-count">128 Tours</div>
+            </div>
+            <div class="category-card" onclick="filterCategory('City')">
+                <div class="category-icon">🏙️</div>
+                <div class="category-name">City Tours</div>
+                <div class="category-count">312 Tours</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Tours -->
+    <section class="featured">
+        <h2 class="section-title">Featured Tours & Activities</h2>
+        <div class="tour-grid" id="tourGrid">
+            <!-- Tour cards will be dynamically loaded -->
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="why-us">
+        <div class="why-us-container">
+            <h2 class="section-title">Why Book With Us?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <h3 class="feature-title">Best Price Guarantee</h3>
+                    <p class="feature-desc">Find a lower price? We'll match it and give you 10% off.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">Secure Booking</h3>
+                    <p class="feature-desc">Your payment information is always protected.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📞</div>
+                    <h3 class="feature-title">24/7 Support</h3>
+                    <p class="feature-desc">Our team is here to help you around the clock.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3 class="feature-title">Free Cancellation</h3>
+                    <p class="feature-desc">Plans change! Cancel up to 24 hours before for a full refund.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <h2 class="section-title">What Our Travelers Say</h2>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <p class="testimonial-text">"Amazing experience! The Tokyo food tour was incredible. Our guide was knowledgeable and the food was authentic. Highly recommend!"</p>
+                <div class="testimonial-author">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" alt="Sarah" class="author-avatar">
+                    <div>
+                        <div class="author-name">Sarah Johnson</div>
+                        <div class="author-location">New York, USA</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">"Booked a safari in Kenya and it exceeded all expectations. The booking process was smooth and the experience was life-changing!"</p>
+                <div class="testimonial-author">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="Michael" class="author-avatar">
+                    <div>
+                        <div class="author-name">Michael Chen</div>
+                        <div class="author-location">Singapore</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">"The Paris walking tour was the highlight of our trip. We discovered hidden gems we would never have found on our own."</p>
+                <div class="testimonial-author">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" alt="Emma" class="author-avatar">
+                    <div>
+                        <div class="author-name">Emma Williams</div>
+                        <div class="author-location">London, UK</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>About TourHub</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                    <li><a href="#">Blog</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#" onclick="openHelpCenter(); return false;">Help Center</a></li>
+                    <li><a href="#" onclick="openContactModal(); return false;">Contact Us</a></li>
+                    <li><a href="#" onclick="openSafetyInfo(); return false;">Safety Information</a></li>
+                    <li><a href="#" onclick="openCancellationPolicy(); return false;">Cancellation Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 TourHub Experiences. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Sign In Modal -->
+    <div class="modal-overlay" id="signInModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <button class="modal-close" onclick="closeSignInModal()">×</button>
+            <div class="modal-body">
+                <h2 style="text-align: center; color: #003580; margin-bottom: 0.5rem;">Welcome Back!</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 2rem;">Sign in to your TourHub account</p>
+                
+                <form onsubmit="handleSignIn(event)">
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Email Address</label>
+                        <input type="email" id="signInEmail" placeholder="Enter your email" required style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #ddd; border-radius: 10px; font-size: 1rem;">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Password</label>
+                        <input type="password" id="signInPassword" placeholder="Enter your password" required style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #ddd; border-radius: 10px; font-size: 1rem;">
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" style="width: 18px; height: 18px; cursor: pointer;">
+                            <span style="color: #666; font-size: 0.9rem;">Remember me</span>
+                        </label>
+                        <a href="#" style="color: #ff6b35; text-decoration: none; font-size: 0.9rem;">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn-confirm" style="width: 100%;">Sign In</button>
+                </form>
+                
+                <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #eee;">
+                    <p style="color: #666; margin-bottom: 1rem;">Don't have an account? <a href="#" style="color: #ff6b35; text-decoration: none; font-weight: 600;">Sign up</a></p>
+                    
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button onclick="socialSignIn('Google')" style="flex: 1; padding: 0.75rem; border: 2px solid #ddd; border-radius: 10px; background: white; cursor: pointer; font-weight: 600; transition: all 0.3s;">
+                            📧 Google
+                        </button>
+                        <button onclick="socialSignIn('Facebook')" style="flex: 1; padding: 0.75rem; border: 2px solid #ddd; border-radius: 10px; background: white; cursor: pointer; font-weight: 600; transition: all 0.3s;">
+                            👤 Facebook
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" onclick="closeContactModal()">×</button>
+            <div class="modal-body">
+                <h2 style="text-align: center; color: #003580; margin-bottom: 0.5rem;">Contact Us</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 2rem;">We'd love to hear from you. Send us a message!</p>
+                
+                <form onsubmit="handleContactSubmit(event)">
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Your Name</label>
+                        <input type="text" id="contactName" placeholder="Enter your name" required style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #ddd; border-radius: 10px; font-size: 1rem;">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Email Address</label>
+                        <input type="email" id="contactEmail" placeholder="Enter your email" required style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #ddd; border-radius: 10px; font-size: 1rem;">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Subject</label>
+                        <select id="contactSubject" required style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #ddd; border-radius: 10px; font-size: 1rem; background: white;">
+                            <option value="">Select a subject</option>
+                            <option value="General Inquiry">General Inquiry</option>
+                            <option value="Booking Support">Booking Support</option>
+                            <option value="Cancellation">Cancellation Request</option>
+                            <option value="Feedback">Feedback</option>
+                            <option value="Partnership">Partnership</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Message</label>
+                        <textarea id="contactMessage" placeholder="How can we help you?" required rows="5" style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #ddd; border-radius: 10px; font-size: 1rem; resize: vertical; font-family: inherit;"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-confirm" style="width: 100%;">Send Message</button>
+                </form>
+                
+                <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #eee;">
+                    <p style="color: #666; margin-bottom: 0.5rem;">Or reach us directly:</p>
+                    <p style="color: #003580; font-weight: 600;">📧 support@tourhub.com</p>
+                    <p style="color: #003580; font-weight: 600;">📞 1-800-TOUR-HUB</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tour Detail Modal -->
+    <div class="modal-overlay" id="tourModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <img src="" alt="" class="modal-image" id="modalImage">
+            <div class="modal-body">
+                <div class="modal-category" id="modalCategory"></div>
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <div class="modal-location" id="modalLocation"></div>
+                <div class="modal-rating" id="modalRating"></div>
+                <p class="modal-description" id="modalDescription"></p>
+                <div class="modal-highlights">
+                    <h3>Tour Highlights</h3>
+                    <ul class="highlight-list" id="modalHighlights"></ul>
+                </div>
+                <div class="booking-section">
+                    <div class="booking-date">
+                        <label for="bookingDate">Select Date</label>
+                        <input type="date" id="bookingDate">
+                    </div>
+                    <div class="booking-price">
+                        <div class="price" id="modalPrice"></div>
+                        <div class="per-person">per person</div>
+                    </div>
+                    <button class="btn-confirm" onclick="confirmBooking()">Book Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tour descriptions and highlights
+        const tourDetails = {
+            1: {
+                description: "Embark on a culinary journey through Tokyo's vibrant streets. Led by a local food expert, you'll discover hidden gems and authentic flavors that most tourists never experience. From fresh sushi at Tsukiji Market to savory yakitori in a local izakaya, this tour is a feast for all your senses.",
+                highlights: ["Visit Tsukiji Outer Market", "Taste authentic Japanese street food", "Explore hidden alleys of Shinjuku", "Sample sake at a local bar", "Learn about Japanese food culture"]
+            },
+            2: {
+                description: "Sail around the stunning caldera of Santorini as the sun sets over the Aegean Sea. Enjoy swimming in crystal-clear waters, visiting the volcanic hot springs, and indulging in a delicious Greek BBQ dinner prepared on board. This is the perfect way to experience Santorini's legendary sunset.",
+                highlights: ["Sail around the caldera", "Swim in volcanic hot springs", "Visit Red and White beaches", "Greek BBQ dinner included", "Unlimited drinks on board"]
+            },
+            3: {
+                description: "Witness the breathtaking sunrise over the ancient Incan citadel of Machu Picchu. This 2-day trek takes you through stunning Andean landscapes, cloud forests, and historical sites. A once-in-a-lifetime experience for adventure seekers and history buffs alike.",
+                highlights: ["Sunrise at Machu Picchu", "Guided tour of the citadel", "Hike through cloud forests", "Visit Wiñay Wayna ruins", "Expert mountain guides"]
+            },
+            4: {
+                description: "Skip the long lines and dive straight into the world's largest art museum. With a knowledgeable guide, discover masterpieces including the Mona Lisa, Venus de Milo, and Winged Victory. Learn fascinating stories behind the art and make the most of your Paris visit.",
+                highlights: ["Skip-the-line access", "See the Mona Lisa", "Expert art historian guide", "Small group experience", "Headsets for clear audio"]
+            },
+            5: {
+                description: "Explore the spiritual heart of Bali with visits to ancient temples, stunning rice terraces, and traditional villages. Experience the island's rich culture, meet local artisans, and enjoy a traditional Balinese lunch with panoramic views.",
+                highlights: ["Visit Tirta Empul Temple", "Explore Tegalalang Rice Terrace", "Traditional Balinese lunch", "Coffee plantation visit", "Sacred Monkey Forest"]
+            },
+            6: {
+                description: "Experience the thrill of dune bashing in a 4x4 vehicle across the golden sands of the Dubai Desert. Watch the sunset over the dunes, enjoy camel riding, henna painting, and a traditional BBQ dinner with live entertainment at a Bedouin-style camp.",
+                highlights: ["4x4 dune bashing adventure", "Camel riding experience", "Sunset photo opportunities", "Traditional BBQ dinner", "Live belly dance show"]
+            },
+            7: {
+                description: "Dive into the world's largest coral reef system and discover an underwater paradise. Suitable for all skill levels, this full-day trip includes multiple dive sites, equipment rental, and expert instruction. Swim alongside tropical fish, sea turtles, and vibrant coral gardens.",
+                highlights: ["Multiple dive sites", "All equipment included", "PADI certified instructors", "Underwater photography", "Marine life encounters"]
+            },
+            8: {
+                description: "See New York City from a breathtaking new perspective. Soar above Manhattan's iconic skyline, fly past the Statue of Liberty, and glide over Central Park in a state-of-the-art helicopter. This unforgettable aerial tour showcases the best of the Big Apple.",
+                highlights: ["Aerial views of Manhattan", "Fly past Statue of Liberty", "See Central Park from above", "Professional pilot commentary", "Window seats guaranteed"]
+            },
+            9: {
+                description: "Venture deep into the heart of the Amazon rainforest on this immersive 3-day expedition. Navigate winding rivers, spot exotic wildlife, learn about medicinal plants from local guides, and experience the incredible biodiversity of the world's largest tropical forest.",
+                highlights: ["Jungle trekking expeditions", "Night wildlife spotting", "Piranha fishing", "Visit indigenous communities", "Canoe excursions"]
+            }
+        };
+
+        // Tour data
+        const tours = [
+            {
+                id: 1,
+                title: "Tokyo Street Food Adventure",
+                category: "Food",
+                location: "Tokyo, Japan",
+                duration: "4 hours",
+                rating: 4.9,
+                reviews: 2847,
+                price: 89,
+                image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop",
+                badge: "Bestseller"
+            },
+            {
+                id: 2,
+                title: "Santorini Sunset Sailing",
+                category: "Water",
+                location: "Santorini, Greece",
+                duration: "5 hours",
+                rating: 4.8,
+                reviews: 1923,
+                price: 149,
+                image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&h=400&fit=crop",
+                badge: "Popular"
+            },
+            {
+                id: 3,
+                title: "Machu Picchu Sunrise Trek",
+                category: "Adventure",
+                location: "Cusco, Peru",
+                duration: "2 days",
+                rating: 4.9,
+                reviews: 3456,
+                price: 399,
+                image: "https://images.unsplash.com/photo-1587595431973-160d0d94add1?w=600&h=400&fit=crop",
+                badge: "Top Rated"
+            },
+            {
+                id: 4,
+                title: "Paris Louvre Skip-the-Line",
+                category: "Cultural",
+                location: "Paris, France",
+                duration: "3 hours",
+                rating: 4.7,
+                reviews: 5621,
+                price: 75,
+                image: "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=600&h=400&fit=crop",
+                badge: ""
+            },
+            {
+                id: 5,
+                title: "Bali Temple & Rice Terrace",
+                category: "Cultural",
+                location: "Bali, Indonesia",
+                duration: "8 hours",
+                rating: 4.8,
+                reviews: 2134,
+                price: 65,
+                image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&h=400&fit=crop",
+                badge: "Popular"
+            },
+            {
+                id: 6,
+                title: "Dubai Desert Safari",
+                category: "Adventure",
+                location: "Dubai, UAE",
+                duration: "6 hours",
+                rating: 4.7,
+                reviews: 4521,
+                price: 85,
+                image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=600&h=400&fit=crop",
+                badge: "Bestseller"
+            },
+            {
+                id: 7,
+                title: "Great Barrier Reef Diving",
+                category: "Water",
+                location: "Cairns, Australia",
+                duration: "Full day",
+                rating: 4.9,
+                reviews: 1876,
+                price: 229,
+                image: "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=600&h=400&fit=crop",
+                badge: "Top Rated"
+            },
+            {
+                id: 8,
+                title: "New York Helicopter Tour",
+                category: "City",
+                location: "New York, USA",
+                duration: "1 hour",
+                rating: 4.8,
+                reviews: 3245,
+                price: 299,
+                image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=600&h=400&fit=crop",
+                badge: ""
+            },
+            {
+                id: 9,
+                title: "Amazon Rainforest Expedition",
+                category: "Nature",
+                location: "Manaus, Brazil",
+                duration: "3 days",
+                rating: 4.9,
+                reviews: 987,
+                price: 549,
+                image: "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?w=600&h=400&fit=crop",
+                badge: "Adventure"
+            }
+        ];
+
+        // Cart
+        let cartCount = 0;
+
+        // Current selected tour
+        let currentTourId = null;
+
+        // Render tours
+        function renderTours(tourData) {
+            const tourGrid = document.getElementById('tourGrid');
+            tourGrid.innerHTML = '';
+
+            tourData.forEach(tour => {
+                const card = document.createElement('div');
+                card.className = 'tour-card';
+                card.onclick = (e) => {
+                    if (!e.target.classList.contains('btn-book')) {
+                        openTourModal(tour.id);
+                    }
+                };
+                card.style.cursor = 'pointer';
+                card.innerHTML = `
+                    <div style="position: relative;">
+                        <img src="${tour.image}" alt="${tour.title}" class="tour-image">
+                        ${tour.badge ? `<span class="tour-badge">${tour.badge}</span>` : ''}
+                    </div>
+                    <div class="tour-content">
+                        <div class="tour-category">${tour.category}</div>
+                        <h3 class="tour-title">${tour.title}</h3>
+                        <div class="tour-location">📍 ${tour.location}</div>
+                        <div class="tour-rating">
+                            <span class="stars">${'★'.repeat(Math.floor(tour.rating))}${tour.rating % 1 >= 0.5 ? '½' : ''}</span>
+                            <span class="rating-count">${tour.rating} (${tour.reviews.toLocaleString()} reviews)</span>
+                        </div>
+                        <div class="tour-duration">⏱️ ${tour.duration}</div>
+                        <div class="tour-footer">
+                            <div class="tour-price">$${tour.price}<span>/person</span></div>
+                            <button class="btn-book" onclick="event.stopPropagation(); bookTour(${tour.id})">Book Now</button>
+                        </div>
+                    </div>
+                `;
+                tourGrid.appendChild(card);
+            });
+        }
+
+        // Book tour
+        function bookTour(tourId) {
+            cartCount++;
+            document.getElementById('cartCount').textContent = cartCount;
+            const tour = tours.find(t => t.id === tourId);
+            showToast(`✓ ${tour.title} added to cart!`);
+        }
+
+        // Show cart
+        function showCart() {
+            if (cartCount > 0) {
+                showToast(`🛒 You have ${cartCount} tour(s) in your cart`);
+            } else {
+                showToast('Your cart is empty. Start exploring tours!');
+            }
+        }
+
+        // Filter by category
+        function filterCategory(category) {
+            const filtered = tours.filter(tour => tour.category === category);
+            renderTours(filtered);
+            showToast(`Showing ${category} tours (${filtered.length} found)`);
+        }
+
+        // Show toast
+        let toastCallback = null;
+        function showToast(message, type = 'info', callback = null) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            toastCallback = callback;
+            
+            // Change background color based on type
+            if (type === 'error') {
+                toast.style.background = '#dc3545';
+            } else if (type === 'info') {
+                toast.style.background = '#17a2b8';
+                toast.style.cursor = 'pointer';
+            } else {
+                toast.style.background = '#28a745';
+                toast.style.cursor = 'default';
+            }
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.style.background = '#28a745';
+                toast.style.cursor = 'default';
+                toastCallback = null;
+            }, 4000);
+        }
+        
+        // Add click handler for toast to support callbacks (like sign out)
+        document.getElementById('toast').addEventListener('click', () => {
+            if (toastCallback) {
+                toastCallback();
+            }
+        });
+
+        // Search functionality
+        document.querySelector('.search-btn').addEventListener('click', () => {
+            const query = document.querySelector('.search-input').value.toLowerCase();
+            if (query) {
+                const filtered = tours.filter(tour => 
+                    tour.title.toLowerCase().includes(query) || 
+                    tour.location.toLowerCase().includes(query) ||
+                    tour.category.toLowerCase().includes(query)
+                );
+                renderTours(filtered);
+                showToast(`Found ${filtered.length} tour(s) matching "${query}"`);
+            } else {
+                renderTours(tours);
+                showToast('Showing all tours');
+            }
+        });
+
+        // Open tour detail modal
+        function openTourModal(tourId) {
+            const tour = tours.find(t => t.id === tourId);
+            const details = tourDetails[tourId];
+            
+            if (!tour || !details) return;
+            
+            currentTourId = tourId;
+            
+            document.getElementById('modalImage').src = tour.image;
+            document.getElementById('modalImage').alt = tour.title;
+            document.getElementById('modalCategory').textContent = tour.category;
+            document.getElementById('modalTitle').textContent = tour.title;
+            document.getElementById('modalLocation').textContent = '📍 ' + tour.location + ' • ⏱️ ' + tour.duration;
+            document.getElementById('modalRating').innerHTML = `
+                <span class="stars">${'★'.repeat(Math.floor(tour.rating))}${tour.rating % 1 >= 0.5 ? '½' : ''}</span>
+                <span class="rating-count">${tour.rating} (${tour.reviews.toLocaleString()} reviews)</span>
+            `;
+            document.getElementById('modalDescription').textContent = details.description;
+            document.getElementById('modalPrice').textContent = '$' + tour.price;
+            
+            const highlightsList = document.getElementById('modalHighlights');
+            highlightsList.innerHTML = '';
+            details.highlights.forEach(highlight => {
+                const li = document.createElement('li');
+                li.textContent = highlight;
+                highlightsList.appendChild(li);
+            });
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingDate').min = today;
+            
+            document.getElementById('tourModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('tourModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+            currentTourId = null;
+        }
+        
+        // Confirm booking
+        function confirmBooking() {
+            const date = document.getElementById('bookingDate').value;
+            if (!date) {
+                showToast('Please select a date for your tour', 'error');
+                return;
+            }
+            
+            cartCount++;
+            document.getElementById('cartCount').textContent = cartCount;
+            
+            const tour = tours.find(t => t.id === currentTourId);
+            showToast(`✓ ${tour.title} booked for ${date}! Check your cart.`);
+            closeModal();
+        }
+        
+        // Close modal when clicking overlay
+        document.getElementById('tourModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeModal();
+            }
+        });
+        
+        // Sign In Modal functions
+        function openSignInModal() {
+            document.getElementById('signInModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeSignInModal() {
+            document.getElementById('signInModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+        
+        function handleSignIn(event) {
+            event.preventDefault();
+            const email = document.getElementById('signInEmail').value;
+            const password = document.getElementById('signInPassword').value;
+            
+            if (email && password) {
+                // Simulate sign in
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('isLoggedIn', 'true');
+                
+                closeSignInModal();
+                showToast(`✓ Welcome back! Signed in as ${email}`);
+                updateUIForLoggedInUser();
+            }
+        }
+        
+        function socialSignIn(provider) {
+            // Simulate social sign in
+            const email = `user@${provider.toLowerCase()}.com`;
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('loginProvider', provider);
+            
+            closeSignInModal();
+            showToast(`✓ Signed in with ${provider}!`);
+            updateUIForLoggedInUser();
+        }
+        
+        function updateUIForLoggedInUser() {
+            const email = localStorage.getItem('userEmail');
+            const loginBtn = document.querySelector('.btn-login');
+            if (loginBtn && email) {
+                loginBtn.textContent = '👤 ' + email.split('@')[0];
+                loginBtn.onclick = showUserProfile;
+            }
+        }
+        
+        function showUserProfile() {
+            const email = localStorage.getItem('userEmail');
+            const provider = localStorage.getItem('loginProvider') || 'Email';
+            showToast(`👤 Logged in as ${email} via ${provider}. Click again to sign out.`, 'info', signOut);
+        }
+        
+        // Sign Out function
+        function signOut() {
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('loginProvider');
+            
+            const loginBtn = document.querySelector('.btn-login');
+            if (loginBtn) {
+                loginBtn.textContent = 'Sign In';
+                loginBtn.onclick = openSignInModal;
+            }
+            
+            showToast('✓ You have been signed out successfully');
+        }
+        
+        // Check if user is already logged in on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                updateUIForLoggedInUser();
+            }
+        });
+        
+        // Close sign in modal when clicking overlay
+        document.getElementById('signInModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeSignInModal();
+            }
+        });
+        
+        // Contact Modal functions
+        function openContactModal() {
+            document.getElementById('contactModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeContactModal() {
+            document.getElementById('contactModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+        
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const subject = document.getElementById('contactSubject').value;
+            const message = document.getElementById('contactMessage').value;
+            
+            if (name && email && subject && message) {
+                // Simulate sending message
+                closeContactModal();
+                showToast(`✓ Message sent successfully! We'll get back to you at ${email}`);
+                
+                // Clear the form
+                document.getElementById('contactName').value = '';
+                document.getElementById('contactEmail').value = '';
+                document.getElementById('contactSubject').value = '';
+                document.getElementById('contactMessage').value = '';
+            } else {
+                showToast('Please fill in all fields', 'error');
+            }
+        }
+        
+        // Close contact modal when clicking overlay
+        document.getElementById('contactModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                closeContactModal();
+            }
+        });
+        
+        // Help Center functions
+        function openHelpCenter() {
+            showToast('ℹ️ Help Center: Visit our FAQ page at help.tourhub.com or call 1-800-TOUR-HUB for assistance.');
+        }
+        
+        function openSafetyInfo() {
+            showToast('🛡️ Safety Information: Your safety is our priority. All tours follow strict safety protocols. Learn more at tourhub.com/safety');
+        }
+        
+        function openCancellationPolicy() {
+            showToast('🔄 Cancellation Policy: Free cancellation up to 24 hours before your tour for a full refund. No fees for changes made 48+ hours in advance.');
+        }
+        
+        // Initialize
+        renderTours(tours);
+    </script>
+</body>
+</html>

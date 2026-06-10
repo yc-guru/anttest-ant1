@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>School Library Demo with Barcodes</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: #f5f7fb;
+      color: #1f2933;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: #fff;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #facc15, #f97316 45%, #7c3aed 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.35);
+      color: #1f2933;
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+
+    .brand-text h1 {
+      font-size: 1.4rem;
+      letter-spacing: 0.03em;
+    }
+
+    .brand-text p {
+      font-size: 0.8rem;
+      opacity: 0.85;
+    }
+
+    main {
+      flex: 1;
+      padding: 1.5rem;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 1.5rem 1.75rem 2rem;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
+      gap: 1.5rem;
+      align-items: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .intro-text h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #111827;
+    }
+
+    .intro-text p {
+      font-size: 0.9rem;
+      color: #4b5563;
+      line-height: 1.6;
+      margin-bottom: 0.5rem;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(59, 130, 246, 0.08);
+      color: #1d4ed8;
+      border: 1px solid rgba(59, 130, 246, 0.28);
+    }
+
+    .intro-card {
+      background: radial-gradient(circle at top left, #eff6ff 0, #eef2ff 40%, #fdf2ff 100%);
+      border-radius: 16px;
+      padding: 1rem 1.25rem;
+      border: 1px solid rgba(191, 219, 254, 0.8);
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .intro-card h3 {
+      font-size: 0.95rem;
+      color: #1f2937;
+    }
+
+    .intro-card p {
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+
+    .intro-highlight {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .intro-pill {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: #1d4ed8;
+      color: #e5e7eb;
+    }
+
+    .student-barcode-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 1rem 1rem;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(59, 130, 246, 0.08) 100%);
+      border-radius: 14px;
+      border: 1.5px solid rgba(168, 85, 247, 0.3);
+      margin-bottom: 1.25rem;
+    }
+
+    .student-barcode-label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #5b21b6;
+      min-width: 140px;
+    }
+
+    .student-barcode-input-wrapper {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .student-barcode-input-wrapper span {
+      position: absolute;
+      left: 0.55rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
+
+    .student-barcode-input {
+      width: 100%;
+      padding: 0.55rem 0.55rem 0.55rem 2rem;
+      border-radius: 999px;
+      border: 1.5px solid rgba(168, 85, 247, 0.4);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+      background-color: #ffffff;
+      font-weight: 500;
+      font-family: "Consolas", "Courier New", monospace;
+    }
+
+    .student-barcode-input:focus {
+      border-color: #a855f7;
+      box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.18);
+      background-color: #faf5ff;
+    }
+
+    .student-id-display {
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      background: #a855f7;
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: none;
+      white-space: nowrap;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .student-id-display.active {
+      display: inline-block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .search-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 0.9rem 1rem;
+      background: #f8fafc;
+      border-radius: 14px;
+      border: 1px solid rgba(209, 213, 219, 0.8);
+      margin-bottom: 1.25rem;
+    }
+
+    .search-group {
+      flex: 1 1 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .search-input-wrapper span {
+      position: absolute;
+      left: 0.55rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    .search-input,
+    .barcode-input {
+      width: 100%;
+      padding: 0.5rem 0.5rem 0.5rem 1.7rem;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+      background-color: #ffffff;
+    }
+
+    .search-input:focus,
+    .barcode-input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.18);
+      background-color: #f9fafb;
+    }
+
+    .barcode-input-wrapper span {
+      position: absolute;
+      left: 0.55rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.7rem;
+      color: #9ca3af;
+    }
+
+    .barcode-input-wrapper {
+      position: relative;
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    select {
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      font-size: 0.8rem;
+      background-color: #ffffff;
+      color: #111827;
+      outline: none;
+      cursor: pointer;
+    }
+
+    select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.18);
+    }
+
+    .chip {
+      font-size: 0.7rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      background: #1e293b;
+      color: #e5e7eb;
+      border: 1px solid rgba(15, 23, 42, 0.8);
+      white-space: nowrap;
+    }
+
+    .books-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      gap: 0.5rem;
+    }
+
+    .books-header h3 {
+      font-size: 1rem;
+      color: #111827;
+    }
+
+    .books-header span {
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .book-card {
+      background: #f9fafb;
+      border-radius: 14px;
+      padding: 0.9rem 0.95rem;
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      display: grid;
+      gap: 0.4rem;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+      cursor: default;
+    }
+
+    .book-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 18px rgba(15, 23, 42, 0.16);
+      border-color: #60a5fa;
+      background: #ffffff;
+    }
+
+    .book-card.highlight {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.35);
+      background: #ecfdf3;
+    }
+
+    .book-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .book-meta {
+      font-size: 0.78rem;
+      color: #4b5563;
+    }
+
+    .book-meta span + span::before {
+      content: "•";
+      margin: 0 0.35rem;
+      color: #9ca3af;
+    }
+
+    .book-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.25rem;
+      font-size: 0.75rem;
+    }
+
+    .book-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+
+    .book-tag {
+      padding: 0.12rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .barcode-label {
+      font-size: 0.72rem;
+      color: #6b7280;
+      margin-top: 0.2rem;
+    }
+
+    .barcode-value {
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 0.8rem;
+      color: #111827;
+    }
+
+    .status {
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      border: 1px solid transparent;
+    }
+
+    .status.available {
+      background: #ecfdf5;
+      color: #15803d;
+      border-color: #bbf7d0;
+    }
+
+    .status.checked-out {
+      background: #fef3c7;
+      color: #b45309;
+      border-color: #fde68a;
+    }
+
+    .status.limited {
+      background: #fef2f2;
+      color: #b91c1c;
+      border-color: #fecaca;
+    }
+
+    .status.in-library-use {
+      background: #fef3c7;
+      color: #b45309;
+      border-color: #fde68a;
+    }
+
+    .borrowed-book {
+      border: 2px solid #f59e0b;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(251, 191, 36, 0.05) 100%);
+    }
+
+    .due-date-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.25rem;
+    }
+
+    .due-date {
+      font-size: 0.7rem;
+      color: #dc2626;
+      font-weight: 600;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 1.2rem 0.75rem 0.4rem;
+      color: #6b7280;
+      font-size: 0.85rem;
+    }
+
+    footer {
+      padding: 0.75rem 1.5rem 1.25rem;
+      font-size: 0.75rem;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    footer span {
+      display: inline-block;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: #e5e7eb;
+      color: #111827;
+      font-weight: 500;
+    }
+
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      font-weight: 500;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.3s ease;
+      max-width: 300px;
+      word-wrap: break-word;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.error {
+      background: #ef4444;
+    }
+
+    .toast.warning {
+      background: #f59e0b;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-logo">SL</div>
+        <div class="brand-text">
+          <h1>School Library</h1>
+          <p>Demo catalog with barcodes</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="container">
+      <div class="intro">
+        <div class="intro-text">
+          <h2>Welcome to the Library</h2>
+          <p>
+            This is a simple demo of a school library catalog. Each book has a
+            barcode number, like a real library.
+          </p>
+          <p>
+            Type or scan a barcode number into the barcode box to quickly jump
+            to a specific book.
+          </p>
+          <div class="tags">
+            <span class="tag">HTML, CSS &amp; JS only</span>
+            <span class="tag">Demo barcodes</span>
+            <span class="tag">Search &amp; filter</span>
+          </div>
+        </div>
+
+        <aside class="intro-card">
+          <h3>Example barcodes you can try</h3>
+          <p style="font-size: 0.8rem;">Paste or type any of these into the barcode box:</p>
+          <ul style="padding-left: 1.1rem; font-size: 0.8rem; color: #4b5563; line-height: 1.5;">
+            <li><strong>10010001</strong> – Charlotte's Web</li>
+            <li><strong>20020003</strong> – Matilda</li>
+            <li><strong>30030002</strong> – Hidden Figures</li>
+            <li><strong>40040001</strong> – To Kill a Mockingbird</li>
+          </ul>
+          <div class="intro-highlight">
+            <span class="intro-pill">Good for barcode demos</span>
+            <span class="intro-pill">Safe fake data</span>
+          </div>
+        </aside>
+      </div>
+
+      <section class="student-barcode-section" aria-label="Student identification">
+        <label class="student-barcode-label" for="studentBarcodeInput">Student ID:</label>
+        <div class="student-barcode-input-wrapper">
+          <input
+            id="studentBarcodeInput"
+            class="student-barcode-input"
+            type="text"
+            placeholder=""
+          />
+        </div>
+        <span id="studentIdDisplay" class="student-id-display"></span>
+      </section>
+
+      <section class="search-section" aria-label="Search and filters">
+        <div class="search-group">
+          <div class="search-row">
+            <div class="search-input-wrapper">
+              <span>🔍</span>
+              <input
+                id="searchInput"
+                class="search-input"
+                type="text"
+                placeholder="Search by title, author, or keyword..."
+              />
+            </div>
+          </div>
+          <div class="search-row">
+            <div class="barcode-input-wrapper">
+              <span>▦</span>
+              <input
+                id="barcodeInput"
+                class="barcode-input"
+                type="text"
+                placeholder="Scan or type barcode number (e.g. 10010001)..."
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <select id="gradeFilter">
+            <option value="all">All grades</option>
+            <option value="1-3">Grades 1–3</option>
+            <option value="4-6">Grades 4–6</option>
+            <option value="7-9">Grades 7–9</option>
+            <option value="10-12">Grades 10–12</option>
+          </select>
+
+          <select id="subjectFilter">
+            <option value="all">All subjects</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Science">Science</option>
+            <option value="History">History</option>
+            <option value="Math">Math</option>
+            <option value="Language Arts">Language Arts</option>
+          </select>
+
+          <span class="chip" id="countChip">12 books</span>
+        </div>
+      </section>
+
+      <section aria-label="Book list">
+        <div class="books-header">
+          <h3>Library Catalog</h3>
+          <span id="filterSummary">Showing all books</span>
+        </div>
+        <div id="booksGrid" class="books-grid"></div>
+        <div id="emptyState" class="empty-state" style="display: none;">
+          No books match your search. Try changing the text or filters.
+        </div>
+      </section>
+
+      <section aria-label="Borrowed books" id="borrowedSection" style="display: none;">
+        <div class="books-header">
+          <h3>My Borrowed Books</h3>
+          <span id="borrowedCount">0 books</span>
+        </div>
+        <div id="borrowedBooksGrid" class="books-grid"></div>
+        <div id="noBorrowedState" class="empty-state">
+          You haven't borrowed any books yet.
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <span>School Library Demo &mdash; front‑end only</span>
+  </footer>
+
+  <script>
+    const students = {
+      "100234b@223ook": {
+        name: "Lim Sherly",
+        grade: "1-3",
+        class: "2 FU"
+      },
+      "100234b@210ook": {
+        name: "Ammy",
+        grade: "1-3",
+        class: "1 WU"
+      },
+      "100225@220ook": {
+        name: "Hannah",
+        grade: "1-3",
+        class: "2 WU"
+      },
+      "100234a@225ook": {
+        name: "David",
+        grade: "1-3",
+        class: "1 FU"
+      },
+      "200234@seokk": {
+        name: "Teacher Lim",
+        grade: "Teacher"
+      },
+      "200234@seokp": {
+        name: "Lim HS",
+        grade: "Principal Assistant",
+        class: "NO CLASS"
+      },
+      "820345e@beokk": {
+       name: "Hong Ai Hah",
+       grade: "Principal Assistant",
+       class: "NO CLASS"
+      },
+      "100235f@345ook": {
+       name: "Ben",
+       grade: "1-3",
+       class: "1 QI"
+      },
+      "100345@267ook" : {
+       name: "Cheah",
+       grade: "4-6",
+       class: "4 WU"
+      }
+    };
+
+    const books = [
+      {
+        title: "The Secret Garden",
+        author: "Frances Hodgson Burnett",
+        gradeBand: "4-6",
+        subject: "Fiction",
+        year: 1911,
+        tags: ["classic", "friendship"],
+        status: "available",
+        barcode: "20020001"
+      },
+      {
+        title: "Wonder",
+        author: "R. J. Palacio",
+        gradeBand: "4-6",
+        subject: "Fiction",
+        year: 2012,
+        tags: ["empathy", "school life"],
+        status: "available",
+        barcode: "20020002"
+      },
+      {
+        title: "Matilda",
+        author: "Roald Dahl",
+        gradeBand: "4-6",
+        subject: "Fiction",
+        year: 1988,
+        tags: ["humor", "magic"],
+        status: "available",
+        barcode: "20020003"
+      },
+      {
+        title: "A Brief History of Nearly Everything (Young Readers Edition)",
+        author: "Bill Bryson",
+        gradeBand: "7-9",
+        subject: "Science",
+        year: 2019,
+        tags: ["science", "non-fiction"],
+        status: "available",
+        barcode: "30030001"
+      },
+      {
+        title: "Hidden Figures (Young Readers Edition)",
+        author: "Margot Lee Shetterly",
+        gradeBand: "7-9",
+        subject: "History",
+        year: 2016,
+        tags: ["space", "biography"],
+        status: "available",
+        barcode: "30030002"
+      },
+      {
+        title: "The Hobbit",
+        author: "J. R. R. Tolkien",
+        gradeBand: "7-9",
+        subject: "Fiction",
+        year: 1937,
+        tags: ["fantasy", "adventure"],
+        status: "available",
+        barcode: "30030003"
+      },
+      {
+        title: "To Kill a Mockingbird",
+        author: "Harper Lee",
+        gradeBand: "10-12",
+        subject: "Fiction",
+        year: 1960,
+        tags: ["classic", "justice"],
+        status: "available",
+        barcode: "40040001"
+      },
+      {
+        title: "Night",
+        author: "Elie Wiesel",
+        gradeBand: "10-12",
+        subject: "History",
+        year: 1956,
+        tags: ["memoir", "WWII"],
+        status: "available",
+        barcode: "40040002"
+      },
+      {
+        title: "酷达哒 马年 limited edition",
+        author: "astro sdn bhd",
+        gradeBand: "10-12",
+        subject: "必开情绪小怪兽漫画",
+        year: 2026,
+        tags: [" ", " "],
+        status: "available",
+        barcode: "40040003"
+      },
+      {
+        title: "喜乐乐 蛇年 limited edition",
+        author: "astro sdn bhd",
+        gradeBand: "1-3",
+        subject: "Fiction",
+        year: 2025,
+        tags: ["snakes", "comics"],
+        status: "available",
+        barcode: "10010001"
+      },
+      {
+        title: "National Geographic Kids: First Big Book of Space",
+        author: "Catherine D. Hughes",
+        gradeBand: "1-3",
+        subject: "Science",
+        year: 2012,
+        tags: ["space", "pictures"],
+        status: "available",
+        barcode: "10010002"
+      },
+      {
+        title: "Poems for Young People",
+        author: "Assorted Authors",
+        gradeBand: "1-3",
+        subject: "Language Arts",
+        year: 2020,
+        tags: ["poetry", "anthology"],
+        status: "available",
+        barcode: "10010003"
+        }
+        
+    ];
+
+    const booksGrid = document.getElementById("booksGrid");
+    const searchInput = document.getElementById("searchInput");
+    const barcodeInput = document.getElementById("barcodeInput");
+    const studentBarcodeInput = document.getElementById("studentBarcodeInput");
+    const studentIdDisplay = document.getElementById("studentIdDisplay");
+    const gradeFilter = document.getElementById("gradeFilter");
+    const subjectFilter = document.getElementById("subjectFilter");
+    const emptyState = document.getElementById("emptyState");
+    const countChip = document.getElementById("countChip");
+    const filterSummary = document.getElementById("filterSummary");
+
+    let lastHighlightedCard = null;
+    let currentStudentId = null;
+    let studentCheckouts = {}; // Track which student has checked out which book
+
+    // Load checkouts from localStorage on page load
+    function loadCheckouts() {
+      const saved = localStorage.getItem('studentCheckouts');
+      if (saved) {
+        studentCheckouts = JSON.parse(saved);
+        // Reset all book statuses to available first
+        books.forEach(book => book.status = "available");
+        // Then set checked-out books to in-library-use
+        Object.values(studentCheckouts).forEach(checkout => {
+          const book = books.find(b => b.barcode === checkout.barcode);
+          if (book) {
+            book.status = "in-library-use";
+          }
+        });
+      }
+    }
+
+    // Save checkouts to localStorage
+    function saveCheckouts() {
+      localStorage.setItem('studentCheckouts', JSON.stringify(studentCheckouts));
+    }
+
+    function renderBorrowedBooks() {
+      const borrowedSection = document.getElementById('borrowedSection');
+      const borrowedBooksGrid = document.getElementById('borrowedBooksGrid');
+      const noBorrowedState = document.getElementById('noBorrowedState');
+      const borrowedCount = document.getElementById('borrowedCount');
+
+      if (!currentStudentId || !studentCheckouts[currentStudentId]) {
+        borrowedSection.style.display = 'none';
+        return;
+      }
+
+      const checkout = studentCheckouts[currentStudentId];
+      const borrowedBarcode = checkout.barcode;
+      const dueDate = new Date(checkout.dueDate);
+      const borrowedBook = books.find(book => book.barcode === borrowedBarcode);
+
+      if (!borrowedBook) {
+        borrowedSection.style.display = 'none';
+        return;
+      }
+
+      // Show the borrowed books section
+      borrowedSection.style.display = 'block';
+      borrowedCount.textContent = '1 book';
+
+      // Render the borrowed book
+      borrowedBooksGrid.innerHTML = '';
+
+      const card = document.createElement("article");
+      card.className = "book-card borrowed-book";
+      card.dataset.barcode = borrowedBook.barcode;
+
+      card.innerHTML = `
+        <div class="book-title">${borrowedBook.title}</div>
+        <div class="book-meta">
+          <span>${borrowedBook.author}</span>
+          <span>Grades ${borrowedBook.gradeBand}</span>
+          <span>${borrowedBook.subject}</span>
+          <span>${borrowedBook.year}</span>
+        </div>
+        <div class="barcode-label">
+          Barcode:
+          <span class="barcode-value">${borrowedBook.barcode}</span>
+        </div>
+        <div class="book-footer">
+          <div class="book-tags">
+            ${borrowedBook.tags.map((t) => `<span class="book-tag">${t}</span>`).join("")}
+          </div>
+          <div class="due-date-info">
+            <span class="status in-library-use">In library use</span>
+            <span class="due-date">Due: ${dueDate.toLocaleDateString()}</span>
+          </div>
+        </div>
+      `;
+
+      borrowedBooksGrid.appendChild(card);
+    }
+
+    function showToast(message, type = 'success') {
+      // Remove existing toast if any
+      const existingToast = document.querySelector('.toast');
+      if (existingToast) {
+        existingToast.remove();
+      }
+
+      // Create new toast
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      // Show toast
+      setTimeout(() => toast.classList.add('show'), 10);
+
+      // Hide and remove toast after 3 seconds
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function renderBooks(list) {
+      booksGrid.innerHTML = "";
+      lastHighlightedCard = null;
+
+      if (!list.length) {
+        emptyState.style.display = "block";
+        countChip.textContent = "0 books";
+        return;
+      }
+
+      emptyState.style.display = "none";
+      countChip.textContent = list.length + (list.length === 1 ? " book" : " books");
+
+      list.forEach((book) => {
+        const card = document.createElement("article");
+        card.className = "book-card";
+        card.dataset.barcode = book.barcode;
+        
+        // Check if current student has this book checked out
+        const isCheckedOutByStudent = currentStudentId && studentCheckouts[currentStudentId] && studentCheckouts[currentStudentId].barcode === book.barcode;
+        const displayStatus = isCheckedOutByStudent ? "in-library-use" : book.status;
+        
+        card.innerHTML = `
+          <div class="book-title">${book.title}</div>
+          <div class="book-meta">
+            <span>${book.author}</span>
+            <span>Grades ${book.gradeBand}</span>
+            <span>${book.subject}</span>
+            <span>${book.year}</span>
+          </div>
+          <div class="barcode-label">
+            Barcode:
+            <span class="barcode-value">${book.barcode}</span>
+          </div>
+          <div class="book-footer">
+            <div class="book-tags">
+              ${book.tags.map((t) => `<span class="book-tag">${t}</span>`).join("")}
+            </div>
+            <span class="status ${displayStatus}">
+              ${
+                displayStatus === "in-library-use"
+                  ? "In library use"
+                  : displayStatus === "available"
+                  ? "Available"
+                  : displayStatus === "checked-out"
+                  ? "Checked out"
+                  : "In library use"
+              }
+            </span>
+          </div>
+        `;
+        booksGrid.appendChild(card);
+      });
+    }
+
+    function updateFilterSummary(textQuery, grade, subject) {
+      const parts = [];
+
+      if (textQuery) {
+        parts.push(`matching “${textQuery}”`);
+      }
+
+      if (grade !== "all") {
+        parts.push(`for grades ${grade}`);
+      }
+
+      if (subject !== "all") {
+        parts.push(`in ${subject}`);
+      }
+
+      if (!parts.length) {
+        filterSummary.textContent = "Showing all books";
+      } else {
+        filterSummary.textContent = "Showing " + parts.join(" & ");
+      }
+    }
+
+    function applyFilters() {
+      const textQuery = searchInput.value.trim().toLowerCase();
+      const grade = gradeFilter.value;
+      const subject = subjectFilter.value;
+
+      const filtered = books.filter((book) => {
+        const matchesText =
+          !textQuery ||
+          book.title.toLowerCase().includes(textQuery) ||
+          book.author.toLowerCase().includes(textQuery) ||
+          book.tags.some((tag) => tag.toLowerCase().includes(textQuery));
+
+        const matchesGrade = grade === "all" || book.gradeBand === grade;
+        const matchesSubject = subject === "all" || book.subject === subject;
+
+        return matchesText && matchesGrade && matchesSubject;
+      });
+
+      renderBooks(filtered);
+      updateFilterSummary(textQuery, grade, subject);
+
+      // Re-apply barcode highlight if barcode box has a value
+      if (barcodeInput.value.trim() !== "") {
+        highlightByBarcode(barcodeInput.value.trim());
+      }
+    }
+
+    function highlightByBarcode(rawValue) {
+      const value = rawValue.trim();
+      if (!value) {
+        if (lastHighlightedCard) {
+          lastHighlightedCard.classList.remove("highlight");
+          lastHighlightedCard = null;
+        }
+        return;
+      }
+
+      const cards = Array.from(booksGrid.querySelectorAll(".book-card"));
+      const match = cards.find((card) => card.dataset.barcode === value);
+
+      if (lastHighlightedCard) {
+        lastHighlightedCard.classList.remove("highlight");
+      }
+
+      // Always try to borrow/return if book exists, even if not currently visible due to filters
+      const book = books.find(b => b.barcode === value);
+      if (book) {
+        if (!currentStudentId) {
+          showToast("Please log in with your student/teacher ID first", "error");
+          return;
+        }
+
+        // Check if student already has this book checked out
+        if (studentCheckouts[currentStudentId] && studentCheckouts[currentStudentId].barcode === value) {
+          // Return the book
+          delete studentCheckouts[currentStudentId];
+          book.status = "available";
+          saveCheckouts();
+        } else {
+          // Prevent borrowing new book when a book is already checked out by this student
+          if (studentCheckouts[currentStudentId]) {
+            showToast("Return your currently borrowed book first", "error");
+            return;
+          }
+
+          // Check if book is available for borrowing
+          if (book.status !== "available") {
+            showToast("This book is not available for borrowing", "error");
+            return;
+          }
+          // Borrow the book
+          const dueDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // Next week
+          studentCheckouts[currentStudentId] = { barcode: value, dueDate: dueDate.toISOString() };
+          book.status = "in-library-use";
+          saveCheckouts();
+        }
+
+        // Re-render to update status
+        applyFilters();
+        renderBorrowedBooks();
+      }
+
+      if (match) {
+        match.classList.add("highlight");
+        lastHighlightedCard = match;
+        match.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else {
+        lastHighlightedCard = null;
+      }
+    }
+
+    searchInput.addEventListener("input", applyFilters);
+    gradeFilter.addEventListener("change", applyFilters);
+    subjectFilter.addEventListener("change", applyFilters);
+
+    barcodeInput.addEventListener("input", (e) => {
+      // many USB barcode scanners "type" numbers then send Enter
+      highlightByBarcode(e.target.value);
+    });
+
+    barcodeInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const value = e.target.value.trim();
+        // Validate book barcode when Enter is pressed
+        if (value) {
+          const bookExists = books.some((book) => book.barcode === value);
+          if (!bookExists) {
+            showToast("Invalid book id", "error");
+            e.target.value = "";
+            e.target.focus();
+            return;
+          }
+        }
+        highlightByBarcode(value);
+      }
+    });
+
+    studentBarcodeInput.addEventListener("input", (e) => {
+      const value = e.target.value.trim();
+      currentStudentId = value;
+
+      if (value) {
+        const student = students[value];
+        if (student) {
+          studentIdDisplay.textContent = `✓ ${student.name} (Grade ${student.grade})`;
+          studentIdDisplay.classList.add("active");
+        } else {
+          studentIdDisplay.textContent = `ID: ${value}`;
+          studentIdDisplay.classList.add("active");
+        }
+      } else {
+        studentIdDisplay.classList.remove("active");
+        currentStudentId = null;
+      }
+
+      renderBorrowedBooks();
+    });
+
+    studentBarcodeInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const value = e.target.value.trim();
+        // Validate student ID when Enter is pressed
+        if (value && !students[value]) {
+          showToast("Invalid student/teacher id", "error");
+          e.target.value = "";
+          e.target.focus();
+          studentIdDisplay.classList.remove("active");
+          currentStudentId = null;
+          renderBorrowedBooks();
+          return;
+        }
+        // Focus on the book barcode input after entering valid student ID
+        if (value) {
+          barcodeInput.focus();
+        }
+      }
+    });
+
+    loadCheckouts();
+    renderBooks(books);
+    renderBorrowedBooks();
+  </script>
+</body>
+</html>

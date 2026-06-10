@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Test - 厚</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .test-item {
+            margin: 20px 0;
+            font-size: 20px;
+        }
+        .chinese-char {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .options {
+            font-size: 18px;
+            color: #333;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chinese Test</h1>
+        <div class="test-item">
+            <div class="chinese-char">厚</div>
+            <div class="options">
+                <p><strong>A:</strong> hou</p>
+                <p><strong>B:</strong> gua</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Disable right-click
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+            return false;
+        });
+
+        // Disable F12
+        document.addEventListener('keydown', function(event) {
+            if (event.keyCode === 123) {
+                event.preventDefault();
+                return false;
+            }
+            // Disable Ctrl+Shift+I
+            if (event.ctrlKey && event.shiftKey && event.keyCode === 73) {
+                event.preventDefault();
+                return false;
+            }
+            // Disable Ctrl+Shift+C
+            if (event.ctrlKey && event.shiftKey && event.keyCode === 67) {
+                event.preventDefault();
+                return false;
+            }
+        });
+
+        // Disable developer tools detection
+        setInterval(function() {
+            if (window.outerHeight - window.innerHeight > 200) {
+                document.body.innerHTML = '';
+            }
+        }, 500);
+    </script>
+</body>
+</html>

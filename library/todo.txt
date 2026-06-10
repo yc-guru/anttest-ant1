@@ -1,0 +1,12 @@
+book borrowing page
+book return page
+change title to: school library management system.
+first page with 2 btn:
+- enter to school library management system, required verification code.
+
+- enter to book borrowing records.
+
+user:
+- librarian
+- student
+- teacher
